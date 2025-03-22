@@ -1,0 +1,17 @@
+node {
+    def CICD = tool name: "maven.3.9.9"
+    stage ('giturl') {
+        git 'https://github.com/InduAmiti/maven-web-application.git'
+    }
+    stage ('build') {
+        sh "$CICD/bin/mvn clean package"
+    }
+    stage ('echo') {
+        echo "Welcome"
+    }
+    stage ('tomcat') {
+        sshagent(['tomcat1']) {
+    // some block
+    sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@35.176.93.170:/opt/tomcat/webapps"
+}
+    }
